@@ -17,7 +17,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Restaturante.Infraestructura\Restaturante.Infraestructura.csproj" />
+    <ProjectReference Include="..\Restaurante.Api\Restaurante.Api.csproj" />
+    <ProjectReference Include="..\Restaurante.Aplicacion\Restaurante.Aplicacion.csproj" />
+    <ProjectReference Include="..\Restaurante.Modelo\Restaurante.Modelo.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Modelo\" />
+    <Folder Include="Aplicación\" />
+    <Folder Include="Infraestructura\" />
   </ItemGroup>
 
 </Project>
