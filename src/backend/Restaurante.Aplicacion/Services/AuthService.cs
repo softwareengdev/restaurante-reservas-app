@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Restaturante.Infraestructura.Repository;
+using Restaurante.Infraestructura.Repository;
 using Restaurante.Aplicacion.Repository;
 using Restaurante.Modelo.Model;
 using Restaurante.Modelo.Model.Auth;

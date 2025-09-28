@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Restaturante.Infraestructura.DBContext;
-using Restaturante.Infraestructura.Repository;
+using Restaurante.Infraestructura.DBContext;
+using Restaurante.Infraestructura.Repository;
 using Restaurante.Modelo.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaturante.Infraestructura.Repository
+namespace Restaurante.Infraestructura.Repository
 {
 
     public class RefreshTokenService : IRefreshTokenService

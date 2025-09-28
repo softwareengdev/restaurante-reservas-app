@@ -39,7 +39,7 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpPost("register")]
-        [AllowAnonymous] // Or restrict to admins in prod
+        [Authorize(Roles = "AdminOnly")] // Or restrict to admins in prod
         public async Task<ActionResult<TokenResponse>> Register([FromBody] Modelo.Model.Auth.RegisterRequest request)
         {
             try
@@ -74,7 +74,7 @@ namespace Restaurante.Api.Controllers
 
         // Advanced: Add logout (revoke refresh token)
         [HttpPost("logout")]
-        [Authorize]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest request)
         {
             await _authService.RevokeRefreshTokenAsync(request.RefreshToken); // Note: In real, get from claims or header

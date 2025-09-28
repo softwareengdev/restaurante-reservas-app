@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Restaturante.Infraestructura.DBContext;
+using Restaurante.Infraestructura.DBContext;
 
 namespace Restaurante.Api.DI
 {

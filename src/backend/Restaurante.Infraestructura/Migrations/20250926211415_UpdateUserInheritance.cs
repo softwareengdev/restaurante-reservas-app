@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Restaturante.Infraestructura.Migrations
+namespace Restaurante.Infraestructura.Migrations
 {
     /// <inheritdoc />
     public partial class UpdateUserInheritance : Migration

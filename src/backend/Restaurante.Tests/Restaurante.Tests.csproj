@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Restaturante.Infraestructura\Restaturante.Infraestructura.csproj" />
+    <ProjectReference Include="..\Restaurante.Infraestructura\Restaurante.Infraestructura.csproj" />
     <ProjectReference Include="..\Restaurante.Api\Restaurante.Api.csproj" />
     <ProjectReference Include="..\Restaurante.Aplicacion\Restaurante.Aplicacion.csproj" />
     <ProjectReference Include="..\Restaurante.Modelo\Restaurante.Modelo.csproj" />

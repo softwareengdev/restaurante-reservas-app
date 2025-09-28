@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaturante.Infraestructura.Repository
+namespace Restaurante.Infraestructura.Repository
 {
     public interface IRefreshTokenService
     {

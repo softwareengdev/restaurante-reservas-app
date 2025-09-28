@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Restaturante.Infraestructura.DBContext;
+using Restaurante.Infraestructura.DBContext;
 
 #nullable disable
 
-namespace Restaturante.Infraestructura.Migrations
+namespace Restaurante.Infraestructura.Migrations
 {
     [DbContext(typeof(RestauranteDbContext))]
-    partial class RestauranteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250928204457_AddRestaurantEntities")]
+    partial class AddRestaurantEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace Restaturante.Infraestructura.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e2e18aeb-ed4f-4468-ad2d-0d932a213825",
+                            Id = "8812f2f5-5cb2-4029-a806-90a4364c1db8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c4b172b2-2d80-46f7-b7bd-6144f861981b",
+                            Id = "5ae8bff6-6b31-4fa9-af0d-31bf3e339a52",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -167,6 +170,163 @@ namespace Restaturante.Infraestructura.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Restaurante.Infraestructura.Entities.Cliente", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Apellidos")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EsVip")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("FechaNacimiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NotasInternas")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumeroVisitas")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Preferencias")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("PuntosLealtad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Clientes_Email");
+
+                    b.ToTable("Clientes");
+                });
+
+            modelBuilder.Entity("Restaurante.Infraestructura.Entities.Mesa", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CalificacionPromedio")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Capacidad")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("EsAccesible")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("TieneVista")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Ubicacion")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("UltimaLimpieza")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Mesas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("27da77ff-941b-412f-b3bb-23337483e4ea"),
+                            CalificacionPromedio = 0,
+                            Capacidad = 4,
+                            EsAccesible = false,
+                            Estado = "Disponible",
+                            Numero = "Mesa 1",
+                            TieneVista = false,
+                            Ubicacion = "Interior"
+                        });
+                });
+
+            modelBuilder.Entity("Restaurante.Infraestructura.Entities.Reserva", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("Duracion")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("FechaCancelacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MesaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Notas")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("NumeroPersonas")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("RequiereMenuEspecial")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("FechaInicio")
+                        .HasDatabaseName("IX_Reservas_FechaInicio");
+
+                    b.HasIndex("MesaId");
+
+                    b.ToTable("Reservas");
                 });
 
             modelBuilder.Entity("Restaurante.Modelo.Entities.RefreshToken", b =>
@@ -314,6 +474,35 @@ namespace Restaturante.Infraestructura.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Restaurante.Infraestructura.Entities.Reserva", b =>
+                {
+                    b.HasOne("Restaurante.Infraestructura.Entities.Cliente", "Cliente")
+                        .WithMany("Reservas")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Restaurante.Infraestructura.Entities.Mesa", "Mesa")
+                        .WithMany("Reservas")
+                        .HasForeignKey("MesaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Mesa");
+                });
+
+            modelBuilder.Entity("Restaurante.Infraestructura.Entities.Cliente", b =>
+                {
+                    b.Navigation("Reservas");
+                });
+
+            modelBuilder.Entity("Restaurante.Infraestructura.Entities.Mesa", b =>
+                {
+                    b.Navigation("Reservas");
                 });
 #pragma warning restore 612, 618
         }

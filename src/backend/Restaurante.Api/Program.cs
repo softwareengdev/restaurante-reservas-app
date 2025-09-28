@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Restaturante.Infraestructura.DBContext;
-using Restaturante.Infraestructura.Repository;
+using Restaurante.Infraestructura.DBContext;
+using Restaurante.Infraestructura.Repository;
 using Restaurante.Aplicacion.Repository;
 using Restaurante.Aplicacion.Services;
 using Restaurante.Modelo.Model;
@@ -86,6 +86,7 @@ namespace Restaurante.Api
                 builder.Services.AddAuthorization(options =>
                 {
                     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                    options.AddPolicy("UserOrAdmin", policy => policy.RequireRole("User", "Admin"));
                 });
 
                 // In Program.cs, update DbContext registration if needed (already there)
@@ -220,15 +221,6 @@ namespace Restaurante.Api
                 app.UseResponseCompression();
 
                 app.MapControllers();
-
-                // Minimal API endpoint example
-                app.MapGet("/weatherforecast", () =>
-                {
-                    // Sample logic
-                    return new[] { "Sunny", "Cloudy" };
-                })
-                .RequireAuthorization("AdminOnly")
-                .CacheOutput();
 
                 // Database migration on startup (for demo; use with caution in prod)
                 using (var scope = app.Services.CreateScope())
