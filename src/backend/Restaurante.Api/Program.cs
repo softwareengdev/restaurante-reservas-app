@@ -7,13 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Restaurante.Infraestructura.DBContext;
-using Restaurante.Infraestructura.Repository;
 using Restaurante.Aplicacion.Repository;
 using Restaurante.Aplicacion.Services;
+using Restaurante.Infraestructura.DBContext;
+using Restaurante.Infraestructura.Repository;
 using Restaurante.Modelo.Model;
 using Restaurante.Modelo.Model.Auth;
 using Serilog;
+using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
 
@@ -135,7 +136,17 @@ namespace Restaurante.Api
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen(options =>
                 {
-                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Restaurante API", Version = "v1" });
+                    options.SwaggerDoc("v1", new OpenApiInfo
+                    {
+                        Title = "Restaurante API",
+                        Version = "v1",
+                        Description = "API para gestión del restaurante",
+                        Contact = new OpenApiContact
+                        {
+                            Name = "Equipo Restaurante",
+                            Email = "soporte@restaurante.com"
+                        }
+                    });
                     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                     {
                         In = ParameterLocation.Header,
@@ -154,6 +165,10 @@ namespace Restaurante.Api
                             Array.Empty<string>()
                         }
                     });
+
+                    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                    options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
                 });
 
 
