@@ -22,7 +22,7 @@ namespace Restaurante.Modelo.Dto
         public string Estado { get; set; } = string.Empty;
         public DateTime? UltimaLimpieza { get; set; }
         public int CalificacionPromedio { get; set; }
-        // Exclude navigation collections for read DTO; use separate endpoints if needed
+        public virtual ICollection<ReservaDto> Reservas { get; set; } = new List<ReservaDto>();
     }
 
     public class CreateMesaDto

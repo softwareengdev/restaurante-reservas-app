@@ -30,9 +30,7 @@ namespace Restaurante.Aplicacion.Profiles // Adjust namespace as per your projec
             CreateMap<Mesa, UpdateMesaDto>();
 
             // Reserva mappings
-            CreateMap<Reserva, ReservaDto>()
-                .ForMember(dest => dest.Mesa, opt => opt.MapFrom(src => src.Mesa))
-                .ForMember(dest => dest.Cliente, opt => opt.MapFrom(src => src.Cliente));
+            CreateMap<Reserva, ReservaDto>();
 
             CreateMap<CreateReservaDto, Reserva>();
             CreateMap<UpdateReservaDto, Reserva>();

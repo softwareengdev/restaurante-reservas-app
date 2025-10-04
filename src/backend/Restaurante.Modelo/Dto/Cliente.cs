@@ -21,6 +21,7 @@ namespace Restaurante.Modelo.Dto
         public bool EsVip { get; set; }
         public int NumeroVisitas { get; set; }
         public string? NotasInternas { get; set; }
+        public virtual ICollection<ReservaDto> Reservas { get; set; } = new List<ReservaDto>();
     }
 
     public class CreateClienteDto
