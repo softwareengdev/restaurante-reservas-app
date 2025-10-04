@@ -18,6 +18,8 @@ using Serilog;
 using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 
 // Assuming namespace matches your project
 namespace Restaurante.Api
@@ -196,6 +198,15 @@ namespace Restaurante.Api
                 builder.Services.AddResponseCompression(options =>
                 {
                     options.EnableForHttps = true;
+                });
+
+                // Register AutoMapper: Scans the current assembly for profiles
+                builder.Services.AddAutoMapper(typeof(Program));  // Or specify assemblies: AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies())
+
+                // Optionally, add global configuration
+                builder.Services.AddAutoMapper(config => {
+                    config.AllowNullCollections = true;  // Advanced: Allow null collections without throwing
+                    /*config.MaxDepth = 3;*/  // Prevent deep recursion in nested mappings
                 });
 
                 // Custom services (example; adjust to your needs)

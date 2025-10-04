@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// ReservasController.cs in Restaurante.Api.Controllers
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Restaurante.Modelo.Model;
+using Restaurante.Aplicacion.Repository;
 using Restaurante.Modelo.Dto;
-using Restaurante.Aplicacion.Services; // IReservaService
 using System.Net.Mime;
 
 namespace Restaurante.Api.Controllers
@@ -146,16 +148,14 @@ namespace Restaurante.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existingReserva = await _reservaService.GetByIdAsync(id);
-            if (existingReserva == null)
-            {
-                return NotFound($"Reservation with ID {id} not found.");
-            }
-
             try
             {
                 await _reservaService.UpdateAsync(id, updateDto);
                 return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Reservation with ID {id} not found.");
             }
             catch (InvalidOperationException ex)
             {
@@ -191,16 +191,14 @@ namespace Restaurante.Api.Controllers
                 return BadRequest("Invalid patch document.");
             }
 
-            var existingReserva = await _reservaService.GetByIdAsync(id);
-            if (existingReserva == null)
-            {
-                return NotFound($"Reservation with ID {id} not found.");
-            }
-
             try
             {
                 await _reservaService.PatchAsync(id, patchDocument);
                 return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Reservation with ID {id} not found.");
             }
             catch (Exception ex)
             {
@@ -223,21 +221,96 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteReserva(Guid id)
         {
-            var existingReserva = await _reservaService.GetByIdAsync(id);
-            if (existingReserva == null)
-            {
-                return NotFound($"Reservation with ID {id} not found.");
-            }
-
             try
             {
                 await _reservaService.DeleteAsync(id);
                 return NoContent();
             }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Reservation with ID {id} not found.");
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting reserva.");
                 return StatusCode(500, "An error occurred while deleting the reservation.");
+            }
+        }
+
+        /// <summary>
+        /// Cancels a reservation by ID.
+        /// </summary>
+        /// <param name="id">Reservation ID.</param>
+        /// <returns>No content on success.</returns>
+        /// <response code="204">Reservation cancelled successfully.</response>
+        /// <response code="404">Reservation not found.</response>
+        /// <response code="400">Reservation already cancelled or invalid state.</response>
+        /// <response code="401">Unauthorized.</response>
+        [HttpPost("{id:guid}/cancel")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> CancelReserva(Guid id)
+        {
+            try
+            {
+                await _reservaService.CancelAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Reservation with ID {id} not found.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cancelling reserva.");
+                return StatusCode(500, "An error occurred while cancelling the reservation.");
+            }
+        }
+
+        /// <summary>
+        /// Queries available tables for a party size at a specific time for a duration.
+        /// </summary>
+        /// <param name="partySize">Number of people.</param>
+        /// <param name="start">Start time.</param>
+        /// <param name="duration">Duration in minutes (e.g., "120" for 2 hours).</param>
+        /// <returns>List of available MesaDto.</returns>
+        /// <response code="200">Returns available tables.</response>
+        /// <response code="400">Invalid parameters.</response>
+        /// <response code="401">Unauthorized.</response>
+        [HttpGet("available")]
+        [ProducesResponseType(typeof(IEnumerable<MesaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetAvailableTables(
+            [FromQuery] int partySize,
+            [FromQuery] DateTime start,
+            [FromQuery] int duration) // Duration in minutes
+        {
+            if (partySize < 1 || duration < 1)
+            {
+                return BadRequest("Invalid party size or duration.");
+            }
+
+            try
+            {
+                var timeSpan = TimeSpan.FromMinutes(duration);
+                var available = await _reservaService.GetAvailableTablesAsync(partySize, start, timeSpan);
+                return Ok(available);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error querying available tables.");
+                return StatusCode(500, "An error occurred while querying available tables.");
             }
         }
     }

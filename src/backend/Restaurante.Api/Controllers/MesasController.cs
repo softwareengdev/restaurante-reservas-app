@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// MesasController.cs in Restaurante.Api.Controllers
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Restaurante.Modelo.Model;
+using Restaurante.Aplicacion.Repository;
 using Restaurante.Modelo.Dto;
-using Restaurante.Aplicacion.Services; // Assuming IMesaService interface
 using System.Net.Mime;
 
 namespace Restaurante.Api.Controllers
@@ -151,16 +153,14 @@ namespace Restaurante.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existingMesa = await _mesaService.GetByIdAsync(id);
-            if (existingMesa == null)
-            {
-                return NotFound($"Table with ID {id} not found.");
-            }
-
             try
             {
                 await _mesaService.UpdateAsync(id, updateDto);
                 return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Table with ID {id} not found.");
             }
             catch (Exception ex)
             {
@@ -195,16 +195,14 @@ namespace Restaurante.Api.Controllers
                 return BadRequest("Invalid patch document.");
             }
 
-            var existingMesa = await _mesaService.GetByIdAsync(id);
-            if (existingMesa == null)
-            {
-                return NotFound($"Table with ID {id} not found.");
-            }
-
             try
             {
                 await _mesaService.PatchAsync(id, patchDocument);
                 return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Table with ID {id} not found.");
             }
             catch (Exception ex)
             {
@@ -230,16 +228,14 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteMesa(Guid id)
         {
-            var existingMesa = await _mesaService.GetByIdAsync(id);
-            if (existingMesa == null)
-            {
-                return NotFound($"Table with ID {id} not found.");
-            }
-
             try
             {
                 await _mesaService.DeleteAsync(id);
                 return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Table with ID {id} not found.");
             }
             catch (Exception ex)
             {

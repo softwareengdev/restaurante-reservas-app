@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// ClientesController.cs in Restaurante.Api.Controllers
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Restaurante.Modelo.Model;
+using Restaurante.Aplicacion.Repository;
 using Restaurante.Modelo.Dto;
 using System.Net.Mime;
 
@@ -146,16 +149,14 @@ namespace Restaurante.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existingCliente = await _clienteService.GetByIdAsync(id);
-            if (existingCliente == null)
-            {
-                return NotFound($"Client with ID {id} not found.");
-            }
-
             try
             {
                 await _clienteService.UpdateAsync(id, updateDto);
                 return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Client with ID {id} not found.");
             }
             catch (Exception ex)
             {
@@ -187,16 +188,14 @@ namespace Restaurante.Api.Controllers
                 return BadRequest("Invalid patch document.");
             }
 
-            var existingCliente = await _clienteService.GetByIdAsync(id);
-            if (existingCliente == null)
-            {
-                return NotFound($"Client with ID {id} not found.");
-            }
-
             try
             {
                 await _clienteService.PatchAsync(id, patchDocument);
                 return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Client with ID {id} not found.");
             }
             catch (Exception ex)
             {
@@ -220,16 +219,14 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteCliente(Guid id)
         {
-            var existingCliente = await _clienteService.GetByIdAsync(id);
-            if (existingCliente == null)
-            {
-                return NotFound($"Client with ID {id} not found.");
-            }
-
             try
             {
                 await _clienteService.DeleteAsync(id);
                 return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Client with ID {id} not found.");
             }
             catch (Exception ex)
             {
