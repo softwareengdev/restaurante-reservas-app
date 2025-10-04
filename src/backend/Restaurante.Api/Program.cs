@@ -11,6 +11,7 @@ using Restaurante.Aplicacion.Repository;
 using Restaurante.Aplicacion.Services;
 using Restaurante.Infraestructura.DBContext;
 using Restaurante.Infraestructura.Repository;
+using Restaurante.Infraestructura.Repository.Impl;
 using Restaurante.Modelo.Model;
 using Restaurante.Modelo.Model.Auth;
 using Serilog;
@@ -198,7 +199,14 @@ namespace Restaurante.Api
                 });
 
                 // Custom services (example; adjust to your needs)
-                //builder.Services.AddScoped<ICustomService, CustomServiceImplementation>();
+                // In Program.cs, register the repositories and services
+                builder.Services.AddScoped<IMesaRepository,MesaRepository>();
+                builder.Services.AddScoped<IReservaRepository,ReservaRepository>();
+                builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+
+                builder.Services.AddScoped<IMesaService, MesaService>();
+                builder.Services.AddScoped<IReservaService,ReservaService>();
+                builder.Services.AddScoped<IClienteService,ClienteService>();
 
                 var app = builder.Build();
 
