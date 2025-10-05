@@ -13,8 +13,7 @@ namespace Restaurante.Api.Controllers
     /// Controller for managing restaurant tables (Mesas).
     /// </summary>
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/[controller]")]
     [Authorize] // Require JWT authentication for all endpoints; adjust per need
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]

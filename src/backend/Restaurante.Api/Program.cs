@@ -1,12 +1,15 @@
+using AutoMapper;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Restaurante.Aplicacion.Profiles;
 using Restaurante.Aplicacion.Repository;
 using Restaurante.Aplicacion.Services;
 using Restaurante.Infraestructura.DBContext;
@@ -18,8 +21,6 @@ using Serilog;
 using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
 
 // Assuming namespace matches your project
 namespace Restaurante.Api
@@ -127,7 +128,8 @@ namespace Restaurante.Api
                 builder.Services.AddCors(options =>
                 {
                     options.AddPolicy("AllowSpecificOrigins",
-                        policy => policy.AllowAnyHeader()
+                        policy => policy.SetIsOriginAllowed(_ => true)
+                                        .AllowAnyHeader()
                                         .AllowAnyMethod()
                                         .AllowCredentials());
                 });
@@ -189,6 +191,7 @@ namespace Restaurante.Api
                 });
 
                 // Output caching
+                builder.Services.AddResponseCaching();
                 builder.Services.AddOutputCache(options =>
                 {
                     options.AddBasePolicy(builder => builder.Expire(TimeSpan.FromSeconds(30)));
@@ -201,7 +204,7 @@ namespace Restaurante.Api
                 });
 
                 // Register AutoMapper: Scans the current assembly for profiles
-                builder.Services.AddAutoMapper(typeof(Program));  // Or specify assemblies: AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies())
+                builder.Services.AddAutoMapper(typeof(RestauranteProfile));  // Or specify assemblies: AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies())
 
                 // Optionally, add global configuration
                 builder.Services.AddAutoMapper(config => {
@@ -244,6 +247,7 @@ namespace Restaurante.Api
                 app.UseRouting();
 
                 app.UseCors("AllowSpecificOrigins");
+                app.UseResponseCaching();
 
                 app.UseAuthentication();
                 app.UseAuthorization();

@@ -37,9 +37,10 @@ namespace Restaurante.Aplicacion.Services
                 orderByFunc = q => q.OrderBy(sortBy);
             }
 
-            var clientes = await _clienteRepository.GetAllAsync(
+            IEnumerable<Cliente> clientes = await _clienteRepository.GetAllAsync(
                 filter: filterExpr,
                 orderBy: orderByFunc,
+                includeProperties: "Reservas",
                 skip: (page - 1) * pageSize,
                 take: pageSize);
 

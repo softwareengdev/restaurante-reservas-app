@@ -16,12 +16,18 @@ namespace Restaurante.Infraestructura.Repository.Impl
 
         public async Task<bool> HasConflictAsync(Guid mesaId, DateTime start, DateTime end, Guid? excludeReservaId = null)
         {
-            var query = dbSet.Where(r => r.MesaId == mesaId && r.Estado != "Cancelada" && r.FechaInicio < end && (r.FechaInicio + r.Duracion) > start);
+            var query = dbSet.Where(r => r.MesaId == mesaId && r.Estado != "Cancelada");
+
             if (excludeReservaId.HasValue)
             {
                 query = query.Where(r => r.Id != excludeReservaId.Value);
             }
-            return await query.AnyAsync();
+
+            // Load to memory to perform the addition client-side
+            var reservations = await query.ToListAsync();
+
+            // Now check overlaps in memory
+            return reservations.Any(r => r.FechaInicio < end && (r.FechaInicio + r.Duracion) > start);
         }
     }
 }

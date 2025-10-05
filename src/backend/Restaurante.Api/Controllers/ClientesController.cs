@@ -13,8 +13,7 @@ namespace Restaurante.Api.Controllers
     /// Controller for managing clients (Clientes).
     /// </summary>
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
