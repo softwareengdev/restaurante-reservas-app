@@ -44,6 +44,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "page", "pageSize", "filter", "sortBy" })]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> GetAllClientes(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
@@ -81,6 +82,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "includeReservas" })]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> GetClienteById(Guid id, [FromQuery] bool includeReservas = false)
         {
             var cliente = await _clienteService.GetByIdAsync(id, includeReservas);
@@ -103,6 +105,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(typeof(ClienteDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> CreateCliente([FromBody] CreateClienteDto createDto)
         {
             if (!ModelState.IsValid)
@@ -141,6 +144,8 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> UpdateCliente(Guid id, [FromBody] UpdateClienteDto updateDto)
         {
             if (!ModelState.IsValid)
@@ -179,7 +184,9 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Consumes("application/json-patch+json")]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> PatchCliente(Guid id, [FromBody] JsonPatchDocument<UpdateClienteDto> patchDocument)
         {
             if (patchDocument == null)
@@ -216,6 +223,8 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> DeleteCliente(Guid id)
         {
             try

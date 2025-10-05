@@ -39,7 +39,7 @@ namespace Restaurante.Api.Controllers
         }
 
         [HttpPost("register")]
-        [Authorize(Roles = "AdminOnly")] // Or restrict to admins in prod
+        [AllowAnonymous]
         public async Task<ActionResult<TokenResponse>> Register([FromBody] Modelo.Model.Auth.RegisterRequest request)
         {
             try

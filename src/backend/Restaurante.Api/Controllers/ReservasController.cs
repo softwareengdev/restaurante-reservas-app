@@ -44,6 +44,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "page", "pageSize", "filter", "sortBy" })]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> GetAllReservas(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
@@ -80,6 +81,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> GetReservaById(Guid id)
         {
             var reserva = await _reservaService.GetByIdAsync(id);
@@ -102,6 +104,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(typeof(ReservaDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> CreateReserva([FromBody] CreateReservaDto createDto)
         {
             if (!ModelState.IsValid)
@@ -140,6 +143,8 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> UpdateReserva(Guid id, [FromBody] UpdateReservaDto updateDto)
         {
             if (!ModelState.IsValid)
@@ -183,6 +188,8 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json-patch+json")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> PatchReserva(Guid id, [FromBody] JsonPatchDocument<UpdateReservaDto> patchDocument)
         {
             if (patchDocument == null)
@@ -218,6 +225,8 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> DeleteReserva(Guid id)
         {
             try
@@ -250,6 +259,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> CancelReserva(Guid id)
         {
             try
@@ -286,6 +296,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<MesaDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> GetAvailableTables(
             [FromQuery] int partySize,
             [FromQuery] DateTime start,

@@ -46,6 +46,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "page", "pageSize", "filter", "sortBy" })]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> GetAllMesas(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
@@ -83,6 +84,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "includeReservas" })]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> GetMesaById(Guid id, [FromQuery] bool includeReservas = false)
         {
             var mesa = await _mesaService.GetByIdAsync(id, includeReservas);
@@ -108,6 +110,7 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> CreateMesa([FromBody] CreateMesaDto createDto)
         {
             if (!ModelState.IsValid)
@@ -145,6 +148,8 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> UpdateMesa(Guid id, [FromBody] UpdateMesaDto updateDto)
         {
             if (!ModelState.IsValid)
@@ -187,6 +192,8 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [Consumes("application/json-patch+json")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> PatchMesa(Guid id, [FromBody] JsonPatchDocument<UpdateMesaDto> patchDocument)
         {
             if (patchDocument == null)
@@ -225,6 +232,8 @@ namespace Restaurante.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Authorize(Roles = "UserOrAdmin")]
         public async Task<IActionResult> DeleteMesa(Guid id)
         {
             try
