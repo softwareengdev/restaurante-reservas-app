@@ -1,0 +1,27 @@
+# .github/workflows/dependency-review.yml
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  pull-requests: write  # For comments
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v4
+      with:
+        fail-on-severity: critical  # Fail PR if critical vulnerabilities
+        allow-licenses: MIT, Apache-2.0  # Customize allowed licenses
+        deny-licenses: GPL-1.0  # Example deny
+        comment-summary-in-pr: true  # Add summary to PR comments
+        base-ref: ${{ github.base_ref }}  # For diff analysis
