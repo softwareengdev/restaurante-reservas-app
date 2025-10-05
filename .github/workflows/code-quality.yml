@@ -1,0 +1,56 @@
+# .github/workflows/code-quality.yml
+name: Code Quality Analysis
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write  # For SARIF uploads
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: csharp  # For .NET projects
+        queries: security-extended,security-and-quality  # Advanced query packs
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3  # Builds the code for analysis
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:csharp"  # Categorize results
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v3.1.0
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Configure in repo secrets
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: >
+          -Dsonar.organization=softwareengdev
+          -Dsonar.projectKey=softwareengdev_restaurante-reservas-app
+          -Dsonar.sources=.
+          -Dsonar.tests=Restaurante.Tests
+          -Dsonar.cs.vscoveragexml.reportsPaths=**/coverage.opencover.xml  # If using OpenCover
+          -Dsonar.verbose=true  # For detailed logs
