@@ -74,7 +74,7 @@ namespace Restaurante.Api.Controllers
 
         // Advanced: Add logout (revoke refresh token)
         [HttpPost("logout")]
-        [Authorize(Roles = "UserOrAdmin")]
+        [AllowAnonymous]
         public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest request)
         {
             await _authService.RevokeRefreshTokenAsync(request.RefreshToken); // Note: In real, get from claims or header
